@@ -1,0 +1,28 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { useTranslations, type UiType } from "../i18n/utils";
+
+type Props = CollectionEntry<"blog">["data"];
+
+const { title, description, lang } =
+  Astro.props;
+
+const t = useTranslations(lang as UiType);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <BaseHead title={title} description={description} />
+  </head>
+  <body>
+    <Header title={t("site.title")} lang={lang} />
+    <main>
+		<slot />
+	</main>
+    <Footer />
+  </body>
+</html>
