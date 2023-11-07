@@ -93,9 +93,11 @@ const page = Astro.props;
   <section>
     <ul>
       {
-        posts.map((post) => (
+        posts.map((post) => {
+          const slug = post.slug.split('/')[0];
+          return (
           <li>
-            <a href={`/${lang}/blog/${post.data.slug_post}/`}>
+            <a href={`/${lang}/blog/${slug}/`}>
               <img width={720} height={360} src={post.data.heroImage} alt="" />
               <h4 class="title">{post.data.title}</h4>
               <p class="date">
@@ -103,7 +105,8 @@ const page = Astro.props;
               </p>
             </a>
           </li>
-        ))
+        )
+        })
       }
     </ul>
   </section>

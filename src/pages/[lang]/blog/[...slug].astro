@@ -6,8 +6,8 @@ export async function getStaticPaths() {
 	const pages = await getCollection('blog');
 
 	const paths = pages.map(page => {
-		console.log("page.data.slug_post",page.data.slug_post)
-		return { params: { lang: page?.data.lang || 'en', slug: page.data.slug_post|| undefined }, props: page }
+		const slug = page.slug.split('/')[0];
+		return { params: { lang: page?.data.lang || 'en', slug }, props: page }
 	})
 
   return paths;
