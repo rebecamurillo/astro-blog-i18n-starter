@@ -1,17 +1,41 @@
 ---
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
-import '../styles/global.css';
+import {
+	languages,
+	pathNameIsInLanguage,
+	defaultLang,
+	getLocalizedPathname,
+	type UiType,
+} from "../i18n/utils";
+import "../styles/global.css";
 
 interface Props {
 	title: string;
 	description: string;
 	image?: string;
+	lang: string;
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const canonicalPathname = pathNameIsInLanguage(Astro.url.pathname, defaultLang)
+	? Astro.url.pathname
+	: getLocalizedPathname(Astro.url.pathname, defaultLang);
+const canonicalURL = new URL(canonicalPathname, Astro.site);
 
-const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
+const {
+	lang,
+	title,
+	description,
+	image = "/blog-placeholder-1.jpg",
+} = Astro.props;
+
+const alternateLang = Object.keys(languages).filter((_lang) => _lang !== lang);
+const alternateLinks = alternateLang.map((_lang: UiType) => {
+	return {
+		href: new URL(getLocalizedPathname(Astro.url.pathname, _lang), Astro.site),
+		hreflang: _lang,
+	};
+});
 ---
 
 <!-- Global Metadata -->
@@ -20,12 +44,33 @@ const { title, description, image = '/blog-placeholder-1.jpg' } = Astro.props;
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <meta name="generator" content={Astro.generator} />
 
+<link rel="sitemap" href="/sitemap-index.xml" />
+
 <!-- Font preloads -->
-<link rel="preload" href="/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
+<link
+	rel="preload"
+	href="/fonts/atkinson-regular.woff"
+	as="font"
+	type="font/woff"
+	crossorigin
+/>
+<link
+	rel="preload"
+	href="/fonts/atkinson-bold.woff"
+	as="font"
+	type="font/woff"
+	crossorigin
+/>
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
+
+<!-- Alternate URLs -->
+{
+	alternateLinks.map(({ href, hreflang }) => (
+		<link rel="alternate" href={href} hreflang={hreflang} />
+	))
+}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

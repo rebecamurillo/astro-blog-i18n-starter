@@ -1,11 +1,3 @@
-export const languages = {
-  en: "English",
-  fr: "Français",
-  es: "Español",
-};
-
-export const defaultLang = "en";
-
 export const ui = {
   en: {
     "site.title": "Astro Blog",
