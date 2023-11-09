@@ -2,8 +2,9 @@
 Features:
 
 - ✅ Same features as Astro Starter Kit Blog
-- ✅ i18n integration
-- ✅ multilingual configuration defaults to EN, FR and ES 
+- ✅ i18n integration with sitemap
+- ✅ multilingual SEO optimization with canonical (EN) and alternate links 
+- ✅ multilingual configuration with EN, FR and ES 
 
 ## 🚀 Project Structure
 
@@ -17,6 +18,8 @@ Inside of your Astro project, you'll see the following folders and files:
 │   ├── layouts/
 │   └── pages/
 │       ├── [lang]/
+│           ├── blog/
+│               ├── [slug]/
 ├── astro.config.mjs
 ├── README.md
 ├── package.json
@@ -27,18 +30,20 @@ Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page
 
 There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more. 
+The `src/content/` directory contains "collections" of related Markdown and MDX documents. 
+Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more. 
+Or use `getBlogPosts()` from the `src/content/config.ts` file, which adds the blog_slug key as a property to the collection. This is the slug that will be used in the header, blogs list page and as canonical and alternate URLs. 
 
 Any static assets, like images, can be placed in the `public/` directory.
 
-- Gérer les traductions danssrc/i18n/ui.ts
-- Modifier cette page danssrc/pages/index.astro
-- Modifier les pages traduites danssrc/pages/[lang]/...
-- Modifier les éléments de l'en-tête du site danssrc/components/Header.astro
-- Ajouter votre nom au pied de page danssrc/components/Footer.astro
-- Découvrez les articles de blog inclus en ES, EN et FR danssrc/pages/blog/
-- Personnalisez la mise en page générale du site danssrc/layouts/Layout.astro
-- Personnalisez la mise en page de la page des articles de blog danssrc/layouts/BlogPost.astro
+- Manage translations in `src/i18n/ui.ts`
+- Edit home page in `src/pages/index.astro` and multilingual in `src/pages/[lang]/index.astro`
+- Edit multilingual pages in `src/pages/[lang]/...`
+- Edit site header elements in `src/components/Header.astro`
+- Add your name to the footer in `src/components/Footer.astro`
+- Discover the blog articles included in ES, EN and FR in `src/pages/[lang]/blog/`
+- Customize the general layout of the site in `src/layouts/Layout.astro`
+- Customize the blog post page layout in `src/layouts/BlogPost.astro`
 
 ## 🧞 Commands
 
@@ -55,7 +60,10 @@ All commands are run from the root of the project, from a terminal:
 
 ## 👀 Want to learn more?
 
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Check out usefull documentation for this template : 
+- [Astro](https://docs.astro.build)
+- [Astro i18n](https://docs.astro.build/en/recipes/i18n/)
+- [Astro sitemaps](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
 
 ## Credit
 
