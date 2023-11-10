@@ -2,9 +2,9 @@
 // Import the global.css file here so that it is included on
 // all pages through the use of the <BaseHead /> component.
 import {
-	languages,
+	LANGUAGES,
 	pathNameIsInLanguage,
-	defaultLang,
+	DEFAULT_LANG,
 	getLocalizedPathname,
 	type UiType,
 } from "../i18n/utils";
@@ -17,9 +17,9 @@ interface Props {
 	lang: string;
 }
 
-const canonicalPathname = pathNameIsInLanguage(Astro.url.pathname, defaultLang)
+const canonicalPathname = pathNameIsInLanguage(Astro.url.pathname, DEFAULT_LANG)
 	? Astro.url.pathname
-	: getLocalizedPathname(Astro.url.pathname, defaultLang);
+	: getLocalizedPathname(Astro.url.pathname, DEFAULT_LANG);
 const canonicalURL = new URL(canonicalPathname, Astro.site);
 
 const {
@@ -29,7 +29,7 @@ const {
 	image = "/blog-placeholder-1.jpg",
 } = Astro.props;
 
-const alternateLang = Object.keys(languages).filter((_lang) => _lang !== lang);
+const alternateLang = Object.keys(LANGUAGES).filter((_lang) => _lang !== lang);
 const alternateLinks = alternateLang.map((_lang: UiType) => {
 	return {
 		href: new URL(getLocalizedPathname(Astro.url.pathname, _lang), Astro.site),

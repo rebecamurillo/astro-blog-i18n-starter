@@ -1,27 +1,27 @@
 import { ui } from "./ui";
 
-export const languages = {
+export const LANGUAGES = {
   en: "English",
   fr: "Français",
   es: "Español",
 };
 
-export const defaultLang = "en";
+export const DEFAULT_LANG = "en";
 
 export type UiType = keyof typeof ui;
 
 export function getLangFromUrl(url: URL) {
   const [, lang] = url.pathname.split("/");
   if (lang in ui) return lang as UiType;
-  return defaultLang;
+  return DEFAULT_LANG;
 }
 
 export function useTranslations(lang?: UiType) {
   return function t(
-    key: keyof (typeof ui)[typeof defaultLang],
+    key: keyof (typeof ui)[typeof DEFAULT_LANG],
     ...args: any[]
   ) {
-    let translation = ui[lang ?? "en"][key] || ui[defaultLang][key];
+    let translation = ui[lang ?? DEFAULT_LANG][key] || ui[DEFAULT_LANG][key];
     if (args.length > 0) {
       for (let i = 0; i < args.length; i++) {
         translation = translation.replace(`{${i}}`, args[i]);
@@ -32,20 +32,29 @@ export function useTranslations(lang?: UiType) {
 }
 
 export function pathNameIsInLanguage(pathname: string, lang: UiType) {
-  return pathname.startsWith(`/${lang}/`) || (lang === defaultLang && !pathNameStartsWithLanguage(pathname));
+  return pathname.startsWith(`/${lang}`) || (lang === DEFAULT_LANG && !pathNameStartsWithLanguage(pathname));
 }
 
 function pathNameStartsWithLanguage(pathname: string) {
-  return (
-    pathname.startsWith("/en") ||
-    pathname.startsWith("/fr") ||
-    pathname.startsWith("/es")
-  );
+  let startsWithLanguage = false;
+  const languages = Object.keys(LANGUAGES);
+
+  for (let i = 0; i < languages.length; i++) {
+    const lang = languages[i];
+    if (pathname.startsWith(`/${lang}`)) {
+      startsWithLanguage = true;
+      break;
+    }
+  }
+
+  return startsWithLanguage;
 }
 
 export function getLocalizedPathname(pathname: string, lang: UiType) {
   if (pathNameStartsWithLanguage(pathname)) {
-    return pathname.replace(/^\/(en|fr|es)/, `/${lang}`);
+    const availableLanguages = Object.keys(LANGUAGES).join('|');
+    const regex = new RegExp(`^\/(${availableLanguages})`);
+    return pathname.replace(regex, `/${lang}`);
   }
   return `/${lang}${pathname}`;
 }
