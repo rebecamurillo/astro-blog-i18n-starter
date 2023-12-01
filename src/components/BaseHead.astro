@@ -29,7 +29,7 @@ const {
 	image = "/blog-placeholder-1.jpg",
 } = Astro.props;
 
-const alternateLang = Object.keys(LANGUAGES).filter((_lang) => _lang !== lang);
+const alternateLang = Object.keys(LANGUAGES);
 const alternateLinks = alternateLang.map((_lang: UiType) => {
 	return {
 		href: new URL(getLocalizedPathname(Astro.url.pathname, _lang), Astro.site),
