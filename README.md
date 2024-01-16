@@ -1,4 +1,7 @@
 # Astro Blog I118n Starter Kit: Blog
+
+Find a step by step [tutorial in my blog](https://rebeca.murillo.link/en/blog/astro-starter-blog-i18n/), which is based on this starter. Happy coding !
+
 Features:
 
 - ✅ Same features as Astro Starter Kit Blog
