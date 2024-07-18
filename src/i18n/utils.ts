@@ -6,6 +6,8 @@ export const LANGUAGES = {
   es: "Español",
 };
 
+export const LANGUAGES_KEYS = Object.keys(LANGUAGES) as UiType[];
+
 export const DEFAULT_LANG = "en";
 
 export type UiType = keyof typeof ui;
