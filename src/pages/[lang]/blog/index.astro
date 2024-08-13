@@ -17,6 +17,12 @@ export async function getStaticPaths() {
   });
 }
 
+const pageSize = 3;
+const pages = Array.from({ length: Math.ceil(posts.length / pageSize) }, (_, i) => {
+  const startIndex = i * pageSize;
+  return posts.slice(startIndex, startIndex + pageSize);
+});
+
 const page = Astro.props;
 ---
 
@@ -74,6 +80,18 @@ const page = Astro.props;
     ul a:hover img {
       box-shadow: var(--box-shadow);
     }
+    .display-pagination {
+      display: contents;
+    }
+    .hidden-pagination {
+      display: none;
+    }
+    .pagination-justify-center {
+      display: flex;
+      justify-content: center;
+      gap: 0.5em;
+      margin-top: 1em;
+    }
     @media (max-width: 720px) {
       ul {
         gap: 0.5em;
@@ -90,21 +108,61 @@ const page = Astro.props;
       }
     }
   </style>
-  <section>
+  <section id="posts-list">
     <ul>
       {
-        posts.map((post) => (
-          <li>
-            <a href={`/${lang}/blog/${post.blog_slug}`}>
-              <img width={720} height={360} src={post.data.heroImage} alt="" />
-              <h4 class="title">{post.data.title}</h4>
-              <p class="date">
-                <FormattedDate date={post.data.pubDate} />
-              </p>
-            </a>
-          </li>
-        ))
+        pages.map((page, index) => {
+          return (
+             <div id={`page-${index}`} class={`pagination-page ${index === 0 ? 'display-pagination' : 'hidden-pagination'}`} >
+              {
+                page.map((post) => {
+                  return (
+                  <li>
+                    <a href={`/${lang}/blog/${post.blog_slug}`}>
+                      <img width={720} height={360} src={post.data.heroImage} alt="" />
+                      <h4 class="title">{post.data.title}</h4>
+                      <p class="date">
+                        <FormattedDate date={post.data.pubDate} />
+                      </p>
+                    </a>
+                  </li>
+                  );
+                })
+              }
+              </div>
+          );
+        })
       }
     </ul>
+    <div id="pagination" class="pagination-justify-center">
+      {
+        pages.map((page, index) => {
+          const pageId = `page-${index}`;
+          return (
+            <button
+              id={`btn-${index}`}
+              onclick={`paginate('${pageId}')`}
+            >
+              {index + 1}
+            </button>
+          );
+        })
+      }
+    </div>
   </section>
+
+  <script is:inline>
+    function paginate(pageId) {
+      document.querySelectorAll('.pagination-page').forEach((element) => {
+
+        if (element.id !== pageId) {
+          element.classList.remove('display-pagination');
+          element.classList.add('hidden-pagination');
+        } else {
+          element.classList.remove('hidden-pagination');
+          element.classList.add('display-pagination');
+        }
+      });
+    }
+  </script>
 </Layout>
