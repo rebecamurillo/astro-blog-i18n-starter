@@ -32,6 +32,11 @@ export const ui = {
       "Check out the included blog posts in languages ES, EN and FR in",
     "home.p3.6": "Customize the general site layout in",
     "home.p3.7": "Customize the blog post page layout in",
+    page: "Page",
+    "pagination.firts": "First",
+    "pagination.prev": "Previous",
+    "pagination.next": "Next",
+    "pagination.last": "Last",
   },
   fr: {
     "site.title": "Astro Blog",
@@ -60,6 +65,11 @@ export const ui = {
     "home.p3.6": "Personnalisez la mise en page générale du site dans",
     "home.p3.7":
       "Personnalisez la mise en page de la page des articles de blog dans",
+    page: "Page",
+    "pagination.firts": "Premier",
+    "pagination.prev": "Précédent",
+    "pagination.next": "Suivant",
+    "pagination.last": "Dernier",
   },
   es: {
     "site.title": "Astro Blog",
@@ -89,5 +99,10 @@ export const ui = {
     "home.p3.6": "Personalice el diseño general del sitio en",
     "home.p3.7":
       "Personalice el diseño de la página de publicación del blog en",
+    page: "Página",
+    "pagination.firts": "Primero",
+    "pagination.prev": "Anterior",
+    "pagination.next": "Siguiente",
+    "pagination.last": "Último",
   },
 } as const;

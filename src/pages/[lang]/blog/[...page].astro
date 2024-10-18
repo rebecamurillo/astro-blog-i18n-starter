@@ -1,0 +1,202 @@
+---
+import { getBlogPosts } from "../../../content/config";
+import FormattedDate from "../../../components/FormattedDate.astro";
+import Layout from "../../../layouts/Layout.astro";
+import { useTranslations } from "../../../i18n/utils";
+
+const { lang } = Astro.params;
+const t = useTranslations(lang);
+
+export async function getStaticPaths({ paginate }) {
+  const PAGE_SIZE = 2;
+  const _posts = await getBlogPosts();
+  return ["en", "fr", "es"].flatMap((lang) => {
+    const posts_filtered = _posts
+      ?.filter((blog) => {
+        return blog?.data?.lang === lang;
+      })
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    return paginate(posts_filtered, { params: { lang }, pageSize: PAGE_SIZE });
+  });
+}
+
+const { page } = Astro.props;
+---
+
+<Layout title="Blog" description="Blog" lang={lang}>
+  <style>
+    main {
+      width: 960px;
+    }
+    ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    ul li {
+      width: calc(50% - 1rem);
+    }
+    ul li * {
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+    ul li:first-child {
+      width: 100%;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    ul li:first-child img {
+      width: 100%;
+    }
+    ul li:first-child .title {
+      font-size: 2.369rem;
+    }
+    ul li img {
+      margin-bottom: 0.5rem;
+      border-radius: 12px;
+    }
+    ul li a {
+      display: block;
+    }
+    .title {
+      margin: 0;
+      color: rgb(var(--black));
+      line-height: 1;
+    }
+    .date {
+      margin: 0;
+      color: rgb(var(--gray));
+    }
+    ul li a:hover h4,
+    ul li a:hover .date {
+      color: rgb(var(--accent));
+    }
+    ul a:hover img {
+      box-shadow: var(--box-shadow);
+    }
+    @media (max-width: 720px) {
+      ul {
+        gap: 0.5em;
+      }
+      ul li {
+        width: 100%;
+        text-align: center;
+      }
+      ul li:first-child {
+        margin-bottom: 0;
+      }
+      ul li:first-child .title {
+        font-size: 1.563em;
+      }
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .page-link {
+      padding: 6px;
+      margin: 0 5px;
+      background-color: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .page-link:hover {
+      opacity: 0.8;
+    }
+
+    .current-page {
+      margin: 0 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .disabled {
+      padding: 6px;
+      margin: 0 5px;
+      color: #bbb;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      cursor: not-allowed;
+    }
+
+    .first-page,
+    .last-page {
+      font-weight: bold;
+    }
+  </style>
+  <section id="posts-list">
+    <ul>
+      {
+        page.data.map((post) => {
+          return (
+            <li>
+              <a href={`/${lang}/blog/${post.blog_slug}`}>
+                <img
+                  width={720}
+                  height={360}
+                  src={post.data.heroImage}
+                  alt=""
+                />
+                <h4 class="title">{post.data.title}</h4>
+                <p class="date">
+                  <FormattedDate date={post.data.pubDate} />
+                </p>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    <div class="pagination">
+      {
+        page.url.first ? (
+          <a href={page.url.first} class="page-link first-page">
+            {t("pagination.firts")}
+          </a>
+        ) : (
+          <span class="disabled">{t("pagination.firts")}</span>
+        )
+      }
+      {
+        page.url.prev ? (
+          <a href={page.url.prev} class="page-link prev-page">
+            {t("pagination.prev")}
+          </a>
+        ) : (
+          <span class="disabled">{t("pagination.prev")}</span>
+        )
+      }
+      <span class="current-page"
+        >{t("page")} {page.currentPage}/{page.lastPage}</span
+      >
+      {
+        page.url.next ? (
+          <a href={page.url.next} class="page-link next-page">
+            {t("pagination.next")}
+          </a>
+        ) : (
+          <span class="disabled">{t("pagination.next")}</span>
+        )
+      }
+      {
+        page.url.last ? (
+          <a href={page.url.last} class="page-link last-page">
+            {t("pagination.last")}
+          </a>
+        ) : (
+          <span class="disabled">{t("pagination.last")}</span>
+        )
+      }
+    </div>
+  </section>
+</Layout>
